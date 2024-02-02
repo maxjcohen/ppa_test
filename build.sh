@@ -1,1 +1,6 @@
-tar cfz aciah.tar.gz src/* Makefile VERSION README.md
+VERSION=$(cat ./VERSION)
+tar cfz "aciah_$VERSION.tar.gz" \
+    src/* \
+    Makefile \
+    VERSION \
+    README.md
