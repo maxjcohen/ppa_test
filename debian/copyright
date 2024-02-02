@@ -1,0 +1,26 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: aciah
+Upstream-Contact: <preferred name and address to reach the upstream project>
+Source: <url://example.com>
+#
+# Please double check copyright with the licensecheck(1) command.
+
+Files:     Dockerfile
+           Makefile
+           README.md
+           VERSION
+           build.sh
+           src/scripts/lecture.sh
+Copyright: __NO_COPYRIGHT_NOR_LICENSE__
+License:   __NO_COPYRIGHT_NOR_LICENSE__
+
+Files:     src/scripts/A-lire-et-obtenir-le-texte.sh
+Copyright: __NO_COPYRIGHT__ in: src/scripts/A-lire-et-obtenir-le-texte.sh
+License:   __UNKNOWN__
+ Décommenter les deux lignes suivantes pour récupérer les log du script et les afficher en direct dans un terminal
+ exec 1>>/var/log/aciah/lireALaVolee.log 2>>/var/log/aciah/lireALaVolee.log
+ xterm -e "tail -f /var/log/aciah/lireALaVolee.log" &
+
+#----------------------------------------------------------------------------
+# Files marked as NO_LICENSE_TEXT_FOUND may be covered by the following
+# license/copyright files.
