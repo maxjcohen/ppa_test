@@ -2,6 +2,7 @@ FROM debian:bookworm-slim
 
 # Install depedencies
 RUN apt update && apt install -y \
+    apt-utils \
     curl \
     debmake \
     devscripts \
