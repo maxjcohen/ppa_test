@@ -13,8 +13,14 @@ cd ..
 dpkg-scanpackages --multiversion . > Packages
 gzip -k -f Packages
 apt-ftparchive release . > Release
+# Sign the Release
+gpg --import /key.asc
+gpg -abs -o - Release > Release.gpg
+gpg --clearsign -o - Release > InRelease
 # Copy built package to ppa folder
 cp *deb /ppa
 cp Packages /ppa
 cp Packages.gz /ppa
 cp Release /ppa
+cp Release.gpg /ppa
+cp InRelease /ppa

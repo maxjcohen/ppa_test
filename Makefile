@@ -2,7 +2,12 @@ PACKAGE=aciah
 VERSION=$(shell cat VERSION)
 
 prefix = /usr/local
-deb_files = ppa/$(PACKAGE)_$(VERSION)-1_amd64.deb ppa/Packages ppa/Packages.gz ppa/Release
+deb_files = ppa/$(PACKAGE)_$(VERSION)-1_amd64.deb \
+	    ppa/Packages \
+	    ppa/Packages.gz \
+	    ppa/Release \
+	    ppa/Release.gpg \
+	    ppa/InRelease
 
 install: src/scripts/lecture.sh
 	install -D src/scripts/lecture.sh \
@@ -31,6 +36,7 @@ $(deb_files): $(PACKAGE)-$(VERSION).tar.gz
 	docker run --rm \
 	    -v "./$(PACKAGE)-$(VERSION).tar.gz:/orig/$(PACKAGE)-$(VERSION).tar.gz" \
 	    -v ./ppa:/ppa \
+	    -v ./key.asc:/key.asc \
 	    -e PACKAGE="$(PACKAGE)" \
 	    -e VERSION="$(VERSION)" \
 	    aciah_ppa
