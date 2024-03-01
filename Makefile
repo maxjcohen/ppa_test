@@ -1,3 +1,6 @@
+PACKAGE=aciah
+VERSION=$(shell cat VERSION)
+
 prefix = /usr/local
 
 install: src/scripts/lecture.sh
@@ -7,4 +10,32 @@ install: src/scripts/lecture.sh
 uninstall:
 	-rm -f $(DESTDIR)$(prefix)/bin/aciah_lecture
 
-.PHONY: install uninstall
+archive: $(PACKAGE)-$(VERSION).tar.gz
+$(PACKAGE)-$(VERSION).tar.gz: src/scripts/lecture.sh VERSION debian/*
+	# Create temporary directory
+	mkdir -p /tmp/$(PACKAGE)-$(VERSION)
+	cp -r ./* /tmp/$(PACKAGE)-$(VERSION)
+	mv /tmp/$(PACKAGE)-$(VERSION) .
+	# Create tarball
+	tar cfz $(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)-$(VERSION)
+	# Remove temporary directory
+	rm -r $(PACKAGE)-$(VERSION)
+
+package: ppa/$(PACKAGE)_$(VERSION)-1_amd64.deb
+ppa/$(PACKAGE)_$(VERSION)-1_amd64.deb: $(PACKAGE)-$(VERSION).tar.gz
+	# Build docker image
+	docker build -t aciah_ppa -f docker/Dockerfile .
+	# Package in a container
+	mkdir -p ./ppa
+	docker run --rm \
+	    -v "./$(PACKAGE)-$(VERSION).tar.gz:/orig/$(PACKAGE)-$(VERSION).tar.gz" \
+	    -v ./ppa:/ppa \
+	    -e PACKAGE="$(PACKAGE)" \
+	    -e VERSION="$(VERSION)" \
+	    aciah_ppa
+
+clean:
+	rm -f $(PACKAGE)-$(VERSION).tar.gz
+	rm -f ./ppa/$(PACKAGE)_$(VERSION)-1_amd64.deb
+
+.PHONY: install uninstall archive package clean
